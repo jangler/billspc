@@ -1,4 +1,6 @@
-# Bill's PC
+# GBC Pokémon party export
+
+<https://jangler.github.io/billspc/>
 
 Exports party and PC contents from a Pokémon Crystal save file to text. The
 text format is compatible with [Smogon](https://www.smogon.com/) and
