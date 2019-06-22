@@ -251,5 +251,5 @@ const moves = [
 	'Future Sight',
 	'Rock Smash',
 	'Whirlpool',
-	'Beat Up'
+	'Beat Up',
 ];

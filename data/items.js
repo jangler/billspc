@@ -83,7 +83,7 @@ const items = [
 	'Burnt Berry',
 	'Ice Berry',
 	'Poison Barb',
-	'King's Rock',
+	"King's Rock",
 	'Bitter Berry',
 	'Mint Berry',
 	null,
@@ -190,5 +190,5 @@ const items = [
 	null,
 	null,
 	null,
-	null
+	null,
 ];

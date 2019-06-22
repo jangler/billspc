@@ -83,7 +83,7 @@ const dex = [
 	'Slowbro',
 	'Magnemite',
 	'Magneton',
-	'Farfetch'd',
+	"Farfetch'd",
 	'Doduo',
 	'Dodrio',
 	'Seel',
@@ -253,5 +253,5 @@ const dex = [
 	'Ho-Oh',
 	'Celebi',
 	null,
-	'Egg'
+	'Egg',
 ];
