@@ -7,19 +7,19 @@ text. The text format is compatible with [Smogon](https://www.smogon.com/) and
 [Pokémon Showdown](https://pokemonshowdown.com/). Save files for other GB/C
 Pokémon games have not been tested.
 
-## Export features
+## Features
 
 ### Done:
 
 - [x] Species
 - [x] Held item
 - [x] Moves
+- [x] DVs (~IVs)
+- [x] Stat exp (~EVs)
+- [x] Level
 
 ### To-do:
 
-- [ ] DVs (~IVs)
-- [ ] Level
-- [ ] Stat exp (~EVs)
 - [ ] Nicknames
 - [ ] Hidden Power type
 - [ ] Gender

@@ -21,18 +21,44 @@ const gen2Save = {
 	boxPkmnSize: 0x20,
 };
 
+// returns {hp, attack, defense, speed, special}, range 0-65535.
+// the raw values are little-endian.
+function parseStatExp(bytes) {
+	return {
+		hp: (bytes[0] << 8) + bytes[1],
+		attack: (bytes[2] << 8) + bytes[3],
+		defense: (bytes[4] << 8) + bytes[5],
+		speed: (bytes[6] << 8) + bytes[7],
+		special: (bytes[8] << 8) + bytes[9],
+	};
+}
+
+// returns {attack, defense, speed, special}, range 0-15.
+function parseDVs(byte1, byte2) {
+	return {
+		attack: byte1 >> 4,
+		defense: byte1 & 0xf,
+		speed: byte2 >> 4,
+		special: byte2 & 0xf,
+	};
+}
+
 // load info about a pokémon from a Uint8Array slice, which should start at the
 // beginning of the pokémon's data structure in party or PC.
 function readPokemon(bytes, gen) {
 	if (gen == 1) {
 		return {
 			species: gen1dex[bytes[0]],
+			// level is stored differently in party vs in box
+			level: bytes.length > 0x21 ? bytes[0x21] : bytes[3],
 			moves: [
 				moves[bytes[8]],
 				moves[bytes[9]],
 				moves[bytes[10]],
 				moves[bytes[11]],
 			],
+			statExp: parseStatExp(bytes.slice(0x11, 0x1b)),
+			dvs: parseDVs(bytes[0x1b], bytes[0x1c]),
 		};
 	} else if (gen == 2) {
 		return {
@@ -44,10 +70,52 @@ function readPokemon(bytes, gen) {
 				moves[bytes[4]],
 				moves[bytes[5]],
 			],
+			statExp: parseStatExp(bytes.slice(0x0b, 0x15)),
+			dvs: parseDVs(bytes[0x15], bytes[0x16]),
+			level: bytes[0x1f],
 		};
 	} else {
 		throw new Error(`no such gen: ${gen}`);
 	}
+}
+
+// scales a 0-65535 stat experience value to a gen 3+ EV. in gen 3+, EVs after
+// 252 don't count for anything, so that's treated as the maximum per stat.
+function scaleStatExp(exp) {
+	const ev = Math.floor(Math.sqrt(exp));
+	return ev > 252 ? 252 : ev;
+}
+
+// returns a pokémon's stat experience formatted as gen 3+ EVs.
+function formatStatExp(stats) {
+	const hp = scaleStatExp(stats.hp),
+		attack = scaleStatExp(stats.attack),
+		defense = scaleStatExp(stats.defense),
+		speed = scaleStatExp(stats.speed),
+		special = scaleStatExp(stats.special);
+	return `EVs: ${hp} HP / ${attack} Atk / ${defense} Def / ` +
+		`${special} SpA / ${special} SpD / ${speed} Spe`;
+}
+
+// scales a 0-15 gen 1-2 DV to a 0-31 gen 3+ IV. 0-14 = 0-28, 15 = 31.
+// this is what showdown teambuilder does.
+function scaleDV(dv) {
+	return dv == 15 ? 31 : dv*2;
+}
+
+// returns a pokémon's DVs formatted as gen 3+ IVs.
+function formatDVs(dvs) {
+	const hp = scaleDV( // determined by LSBs of the other four
+		8 * (dvs.attack & 1) +
+		4 * (dvs.defense & 1) +
+		2 * (dvs.speed & 1) +
+		(dvs.special & 1));
+	const attack = scaleDV(dvs.attack),
+		defense = scaleDV(dvs.defense),
+		speed = scaleDV(dvs.speed),
+		special = scaleDV(dvs.special);
+	return `IVs: ${hp} HP / ${attack} Atk / ${defense} Def / ` +
+		`${special} SpA / ${special} SpD / ${speed} Spe`;
 }
 
 // formats a loaded pokémon as a string in smogon/showdown format.
@@ -59,6 +127,10 @@ function formatPokemon(mon) {
 	} else {
 		lines.push(mon.species);
 	}
+
+	lines.push(`Level: ${mon.level}`);
+	lines.push(formatStatExp(mon.statExp));
+	lines.push(formatDVs(mon.dvs));
 
 	for (let move of mon.moves.filter(move => move)) {
 		lines.push(`- ${move}`);
@@ -89,7 +161,7 @@ function sav2txt(buffer, gen) {
 	}
 
 	if (!party.length) {
-		return {error: new Error('Invalid save file.')}
+		return {error: new Error('Invalid save file.')};
 	}
 
 	const pc = [];
