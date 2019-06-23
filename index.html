@@ -13,13 +13,17 @@
   <body>
     <h1>GBC Pokémon party export</h1>
 
-    <p>Select a game:</p>
+    <p>1. Select a game:</p>
     <input type="radio" id="gen1" name="gen" value="1" checked="true">
     <label for="gen1">Red/Blue</label>
     <input type="radio" id="gen2" name="gen" value="2">
     <label for="gen2">Crystal</label>
 
-    <p>Select a .sav file:</p>
+    <p>2. Select options:</p>
+    <input type="checkbox" id="stats" name="stats" checked>
+    <label for="stats">Include stat determinants</label>
+
+    <p>3. Select a .sav file:</p>
     <input type="file" accept=".sav" onchange="handleFiles(this.files)">
 
     <div class="error" id="errorDiv" style="display: none;">
@@ -35,12 +39,13 @@
         </textarea>
     </div>
 
-    <footer><p>
-      <a href="https://github.com/jangler/billspc">View source code on GitHub</a>
-    </p></footer>
+    <footer><p><a href="https://github.com/jangler/billspc">
+      View source code on GitHub
+    </a></p></footer>
 
     <script>
 const gen1Button = document.getElementById('gen1');
+const statsButton = document.getElementById('stats');
 const errorDiv = document.getElementById('errorDiv');
 const errorText = document.getElementById('errorText');
 const partyText = document.getElementById('partyText');
@@ -54,12 +59,15 @@ function handleFiles(files) {
     const reader = new FileReader();
     reader.addEventListener('loadend', function() {
       const gen = gen1Button.checked ? 1 : 2;
-      const txt = sav2txt(reader.result, gen);
+      const opts = {
+        determinants: statsButton.checked,
+      };
+      const txt = sav2txt(reader.result, gen, opts);
       if (txt.error) {
         errorDiv.style.display = 'block';
         errorText.innerText = txt.error;
-        partyText.innerHTML = ''
-        pcText.innerHTML = ''
+        partyText.innerHTML = '';
+        pcText.innerHTML = '';
       } else {
         errorDiv.style.display = 'none';
         partyText.innerHTML = txt.party;

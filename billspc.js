@@ -119,7 +119,7 @@ function formatDVs(dvs) {
 }
 
 // formats a loaded pokémon as a string in smogon/showdown format.
-function formatPokemon(mon) {
+function formatPokemon(mon, opts) {
 	const lines = [];
 
 	if (mon.item) {
@@ -128,9 +128,11 @@ function formatPokemon(mon) {
 		lines.push(mon.species);
 	}
 
-	lines.push(`Level: ${mon.level}`);
-	lines.push(formatStatExp(mon.statExp));
-	lines.push(formatDVs(mon.dvs));
+	if (opts.determinants) {
+		lines.push(`Level: ${mon.level}`);
+		lines.push(formatStatExp(mon.statExp));
+		lines.push(formatDVs(mon.dvs));
+	}
 
 	for (let move of mon.moves.filter(move => move)) {
 		lines.push(`- ${move}`);
@@ -140,7 +142,7 @@ function formatPokemon(mon) {
 }
 
 // takes an ArrayBuffer and returns a {party, pc, error} object.
-function sav2txt(buffer, gen) {
+function sav2txt(buffer, gen, opts) {
 	if (buffer.byteLength != 32*1024) {
 		return {error: new Error('Save file is the wrong size!')};
 	}
@@ -201,8 +203,8 @@ function sav2txt(buffer, gen) {
 	}
 
 	return {
-		party: party.map(mon => formatPokemon(mon)).join('\n\n'),
-		pc: pc.map(mon => formatPokemon(mon)).join('\n\n'),
+		party: party.map(mon => formatPokemon(mon, opts)).join('\n\n'),
+		pc: pc.map(mon => formatPokemon(mon, opts)).join('\n\n'),
 		error: null,
 	};
 }
