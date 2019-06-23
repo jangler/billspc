@@ -25,7 +25,9 @@
     <p>2. Select options:</p>
     <input type="checkbox" id="stats" name="stats" checked>
     <label for="stats">Include stat determinants</label>
-
+    <br>
+    <input type="checkbox" id="happiness" name="happiness" checked>
+    <label for="happiness">Include happiness</label>
 
     <p>3. Select a .sav file:</p>
     <input type="file" accept=".sav" onchange="handleFiles(this.files)">
@@ -54,6 +56,7 @@
     <script>
 const gen1Button = document.getElementById('gen1');
 const statsButton = document.getElementById('stats');
+const happyButton = document.getElementById('happiness');
 const errorDiv = document.getElementById('errorDiv');
 const errorText = document.getElementById('errorText');
 const partyText = document.getElementById('partyText');
@@ -69,6 +72,7 @@ function handleFiles(files) {
       const gen = gen1Button.checked ? 1 : 2;
       const opts = {
         determinants: statsButton.checked,
+        happiness: happyButton.checked,
       };
       const txt = sav2txt(reader.result, gen, opts);
       if (txt.error) {

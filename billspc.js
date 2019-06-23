@@ -149,7 +149,9 @@ function formatPokemon(mon, gen, opts) {
 		if (dvsAreShiny(mon.dvs)) {
 			lines.push('Shiny: Yes');
 		}
-		lines.push(`Happiness: ${mon.happiness}`);
+		if (opts.happiness) {
+			lines.push(`Happiness: ${mon.happiness}`);
+		}
 	}
 
 	if (opts.determinants) {
