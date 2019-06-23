@@ -2,48 +2,66 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Bill's PC</title>
+    <title>GBC Pokémon party export</title>
     <link href="style.css" rel="stylesheet" type="text/css">
-    <script src="data/dex.js"></script>
+    <script src="data/gen1dex.js"></script>
+    <script src="data/gen2dex.js"></script>
     <script src="data/items.js"></script>
     <script src="data/moves.js"></script>
     <script src="billspc.js"></script>
   </head>
   <body>
+    <h1>GBC Pokémon party export</h1>
+
+    <p>Select a game:</p>
+    <input type="radio" id="gen1" name="gen" value="1" checked="true">
+    <label for="gen1">Red/Blue</label>
+    <input type="radio" id="gen2" name="gen" value="2">
+    <label for="gen2">Crystal</label>
+
     <p>Select a .sav file:</p>
     <input type="file" accept=".sav" onchange="handleFiles(this.files)">
-    <div id="errorDiv" style="display: none;">
+
+    <div class="error" id="errorDiv" style="display: none;">
       <p id="errorText"></p>
     </div>
-    <div id="resultDiv" style="display: none;">
+
+    <div id="resultDiv">
       <p>Party:</p>
-      <textarea id="partyText" rows="10" cols="40"></textarea>
+      <textarea id="partyText" spellcheck="false" rows="10" cols="40">
+        </textarea>
       <p>PC:</p>
-      <textarea id="pcText" rows="10" cols="40"></textarea>
+      <textarea id="pcText" spellcheck="false" rows="10" cols="40">
+        </textarea>
     </div>
+
+    <footer><p>
+      <a href="https://github.com/jangler/billspc">View source code on GitHub</a>
+    </p></footer>
+
     <script>
+const gen1Button = document.getElementById('gen1');
 const errorDiv = document.getElementById('errorDiv');
 const errorText = document.getElementById('errorText');
-const resultDiv = document.getElementById('resultDiv');
 const partyText = document.getElementById('partyText');
 const pcText = document.getElementById('pcText');
 
 function handleFiles(files) {
   if (!files.length) {
-    resultDiv.style.display = 'none';
     errorDiv.style.display = 'block';
     errorText.innerText = 'No files selected.';
   } else {
     const reader = new FileReader();
     reader.addEventListener('loadend', function() {
-      const txt = sav2txt(reader.result);
+      const gen = gen1Button.checked ? 1 : 2;
+      const txt = sav2txt(reader.result, gen);
       if (txt.error) {
-        resultDiv.style.display = 'none';
         errorDiv.style.display = 'block';
         errorText.innerText = txt.error;
+        partyText.innerHTML = ''
+        pcText.innerHTML = ''
       } else {
         errorDiv.style.display = 'none';
-        resultDiv.style.display = 'block';
         partyText.innerHTML = txt.party;
         pcText.innerHTML = txt.pc;
       }

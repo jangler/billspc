@@ -1,5 +1,5 @@
 // array index corresponds to in-game index (and pokédex number).
-const dex = [
+const gen2dex = [
 	null,
 	'Bulbasaur',
 	'Ivysaur',

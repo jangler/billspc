@@ -9,3 +9,14 @@ body {
 	max-width: 40em;
 	width: 90%;
 }
+h1 {
+  margin-top: 0;
+  font-size: large;
+}
+footer {
+  margin-top: 20px;
+  font-size: small;
+}
+.error {
+  color: #ff0000;
+}
