@@ -79,6 +79,12 @@ function readPokemon(bytes, gen) {
 	}
 }
 
+// returns whether a set of DVs results in a shiny gen 2 pokémon.
+function dvsAreShiny(dvs) {
+	return dvs.attack & 2 != 0 &&
+		dvs.defense == 10 && dvs.speed == 10 && dvs.special == 10
+}
+
 // scales a 0-65535 stat experience value to a gen 3+ EV. in gen 3+, EVs after
 // 252 don't count for anything, so that's treated as the maximum per stat.
 function scaleStatExp(exp) {
@@ -118,6 +124,12 @@ function formatDVs(dvs) {
 		`${special} SpA / ${special} SpD / ${speed} Spe`;
 }
 
+// returns the type for hidden power with the given DVs.
+function getHiddenPowerType(dvs) {
+	const index = ((dvs.attack & 3) << 2) + (dvs.defense & 3);
+	return types[index];
+}
+
 // formats a loaded pokémon as a string in smogon/showdown format.
 function formatPokemon(mon, opts) {
 	const lines = [];
@@ -130,11 +142,21 @@ function formatPokemon(mon, opts) {
 
 	if (opts.determinants) {
 		lines.push(`Level: ${mon.level}`);
+	}
+
+	if (dvsAreShiny(mon.dvs)) {
+		lines.push('Shiny: Yes');
+	}
+
+	if (opts.determinants) {
 		lines.push(formatStatExp(mon.statExp));
 		lines.push(formatDVs(mon.dvs));
 	}
 
 	for (let move of mon.moves.filter(move => move)) {
+		if (move == 'Hidden Power') {
+			move = `Hidden Power ${getHiddenPowerType(mon.dvs)}`;
+		}
 		lines.push(`- ${move}`);
 	}
 

@@ -17,10 +17,10 @@ Pokémon games have not been tested.
 - [x] DVs (~IVs)
 - [x] Stat exp (~EVs)
 - [x] Level
+- [x] Hidden Power type
+- [x] Shininess
 
 ### To-do:
 
 - [ ] Nicknames
-- [ ] Hidden Power type
 - [ ] Gender
-- [ ] Shininess
