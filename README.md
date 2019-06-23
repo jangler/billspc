@@ -22,6 +22,5 @@ Pokémon games have not been tested.
 
 ### To-do:
 
-- [ ] Option to omit default values (level 100, happiness 255, etc)
-- [ ] Nicknames
+- [ ] Nickname
 - [ ] Gender
