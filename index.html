@@ -13,6 +13,8 @@
   <body>
     <h1>GBC Pokémon party export</h1>
 
+    <div class="sep"></div>
+
     <p>1. Select a game:</p>
     <input type="radio" id="gen1" name="gen" value="1" checked="true">
     <label for="gen1">Red/Blue</label>
@@ -23,8 +25,11 @@
     <input type="checkbox" id="stats" name="stats" checked>
     <label for="stats">Include stat determinants</label>
 
+
     <p>3. Select a .sav file:</p>
     <input type="file" accept=".sav" onchange="handleFiles(this.files)">
+
+    <div class="sep"></div>
 
     <div class="error" id="errorDiv" style="display: none;">
       <p id="errorText"></p>
@@ -38,6 +43,8 @@
       <textarea id="pcText" spellcheck="false" rows="10" cols="60">
         </textarea>
     </div>
+
+    <div class="sep"></div>
 
     <footer><p><a href="https://github.com/jangler/billspc">
       View source code on GitHub
