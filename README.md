@@ -22,5 +22,6 @@ Pokémon games have not been tested.
 
 ### To-do:
 
+- [ ] Happiness
 - [ ] Nicknames
 - [ ] Gender

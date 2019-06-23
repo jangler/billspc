@@ -131,7 +131,7 @@ function getHiddenPowerType(dvs) {
 }
 
 // formats a loaded pokémon as a string in smogon/showdown format.
-function formatPokemon(mon, opts) {
+function formatPokemon(mon, gen, opts) {
 	const lines = [];
 
 	if (mon.item) {
@@ -144,7 +144,7 @@ function formatPokemon(mon, opts) {
 		lines.push(`Level: ${mon.level}`);
 	}
 
-	if (dvsAreShiny(mon.dvs)) {
+	if (gen == 2 && dvsAreShiny(mon.dvs)) {
 		lines.push('Shiny: Yes');
 	}
 
@@ -225,8 +225,8 @@ function sav2txt(buffer, gen, opts) {
 	}
 
 	return {
-		party: party.map(mon => formatPokemon(mon, opts)).join('\n\n'),
-		pc: pc.map(mon => formatPokemon(mon, opts)).join('\n\n'),
+		party: party.map(mon => formatPokemon(mon, gen, opts)).join('\n\n'),
+		pc: pc.map(mon => formatPokemon(mon, gen, opts)).join('\n\n'),
 		error: null,
 	};
 }
