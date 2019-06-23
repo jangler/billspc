@@ -72,6 +72,7 @@ function readPokemon(bytes, gen) {
 			],
 			statExp: parseStatExp(bytes.slice(0x0b, 0x15)),
 			dvs: parseDVs(bytes[0x15], bytes[0x16]),
+			happiness: bytes[0x1b],
 			level: bytes[0x1f],
 		};
 	} else {
@@ -144,8 +145,11 @@ function formatPokemon(mon, gen, opts) {
 		lines.push(`Level: ${mon.level}`);
 	}
 
-	if (gen == 2 && dvsAreShiny(mon.dvs)) {
-		lines.push('Shiny: Yes');
+	if (gen == 2) {
+		if (dvsAreShiny(mon.dvs)) {
+			lines.push('Shiny: Yes');
+		}
+		lines.push(`Happiness: ${mon.happiness}`);
 	}
 
 	if (opts.determinants) {

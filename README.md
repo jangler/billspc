@@ -13,15 +13,15 @@ Pokémon games have not been tested.
 
 - [x] Species
 - [x] Held item
-- [x] Moves
+- [x] Moves (including type of Hidden Power)
 - [x] DVs (~IVs)
 - [x] Stat exp (~EVs)
 - [x] Level
-- [x] Hidden Power type
+- [x] Happiness
 - [x] Shininess
 
 ### To-do:
 
-- [ ] Happiness
+- [ ] Option to omit default values (level 100, happiness 255, etc)
 - [ ] Nicknames
 - [ ] Gender
