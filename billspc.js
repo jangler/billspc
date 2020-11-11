@@ -22,7 +22,7 @@ const gen2Save = {
 };
 
 // returns {hp, attack, defense, speed, special}, range 0-65535.
-// the raw values are little-endian.
+// the raw values are big-endian.
 function parseStatExp(bytes) {
 	return {
 		hp: (bytes[0] << 8) + bytes[1],
